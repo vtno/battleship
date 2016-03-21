@@ -1,0 +1,20 @@
+<template name="waitOpponent">
+  <div class="row">
+    <div class="col s6 offset-s3">
+      <h1>KUY</h1>
+      <!-- {{#each infos}}
+        {{> info}}
+      {{/each}} -->
+      {{#with infos}}
+        {{> info}}
+      {{/with}}
+    </div>
+  </div>
+</template>
+
+<template name="info">
+  <h1>{{ip}}</h1>
+  <h1>{{port}}</h1>
+  <h1>{{text}}</h1>
+  <h1>{{integer}}</h1>
+</template>
