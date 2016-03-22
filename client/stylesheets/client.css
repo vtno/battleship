@@ -1,4 +1,29 @@
 /* CSS declarations go here */
+@keyframes watingMove {
+  0% {
+    -ms-transform: scale(0); /* IE 9 */
+    -webkit-transform: scale(0); /* Safari */
+    transform: scale(0);
+  }
+  50% {
+    -ms-transform: scale(1.5,1.5); /* IE 9 */
+    -webkit-transform: scale(1.5,1.5); /* Safari */
+    transform: scale(1.5,1.5);
+  }
+  75% {
+    -ms-transform: scale(1); /* IE 9 */
+    -webkit-transform: scale(1); /* Safari */
+    transform: scale(1);
+  }
+  100% {
+    -ms-transform: scale(0); /* IE 9 */
+    -webkit-transform: scale(0); /* Safari */
+    transform: scale(0);
+  }
+}
+html, body{
+  height: 100%;
+}
 h1 {
   font-size: 100px;
 }
@@ -7,4 +32,16 @@ h1 {
 }
 .mid-button{
   text-align: center;
+}
+.playerName{
+  height: 70%;
+}
+.playerName>h3{
+  width: 100%;
+  text-align: center;
+  animation-name: watingMove;
+  animation-duration: 4s;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
 }

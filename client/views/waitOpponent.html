@@ -1,17 +1,10 @@
 <template name="waitOpponent">
   <div class="row">
-    <div class="col s6 offset-s3">
-      <h1>KUY</h1>
-      {{#with routingData}}
-        {{> info}}
-      {{/with}}
+    <div class="name-wrapper- col s8 offset-s2 center-align">
+        <h2 class="name"></h2>
     </div>
   </div>
-</template>
-
-<template name="info">
-  <h1>{{ip}}</h1>
-  <h1>{{port}}</h1>
-  <h1>{{text}}</h1>
-  <h1>{{integer}}</h1>
+  <div class="playerName valign-wrapper">
+    <h3 class="valign">Waiting for opponent...</h3>
+  </div>
 </template>
