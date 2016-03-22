@@ -21,3 +21,8 @@ materialize:materialize
 iron:router
 dapearce:material-icons
 joncursi:socket-io-client
+meteorhacks:npm
+
+
+npm-container
+cosmos:browserify

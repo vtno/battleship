@@ -1,3 +1,8 @@
+var socket = io.connect('http://localhost:9999/')
+socket.on('connect',()=>{
+  console.log('socket connected!')
+})
+socket.emit('hello', {text: "yeaahhhh"})
 Template.home.events({
     "submit .ip-form": (event) => {
       // Prevent default browser form submit
@@ -23,18 +28,23 @@ Template.home.events({
       // Clear form
       event.target.ip.value = ""
       event.target.port.value = ""
+
     }
 });
 Template.waitOpponent.helpers({
-  infos: ()=>{
+  routingData: ()=>{
     // return RoutingInfo.find({})
     console.log(RoutingInfo.findOne({}, {sort: {createAt: -1, limit: 1}}))
     return RoutingInfo.findOne({}, {sort: {createAt: -1, limit: 1}})
   }
-  // ip:()=>{
-  //   return this.ip
-  // },
-  // port:()=>{
-  //   return this.port
-  // }
+})
+
+Template.main.onRendered(()=>{
+  $(document).ready(()=>{
+    console.log("render main")
+    let script = document.createElement('script')
+    script.type = "text/javascript"
+    script.src = "socket.io/socket.io.js"
+    // $('#script_div').append(script)
+  })
 })

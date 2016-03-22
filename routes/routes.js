@@ -1,6 +1,6 @@
-// Router.configure({
-//   layoutTemplate: 'main'
-// })
+Router.configure({
+  layoutTemplate: 'main'
+})
 Router.route('/',{
   template: 'home'
 })
