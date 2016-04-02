@@ -33,10 +33,10 @@ h1 {
 .mid-button{
   text-align: center;
 }
-.playerName{
+.wait{
   height: 70%;
 }
-.playerName>h3{
+.wait>h3{
   width: 100%;
   text-align: center;
   animation-name: watingMove;
