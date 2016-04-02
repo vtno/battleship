@@ -6,7 +6,6 @@ Template.home.events({
     "submit .ip-form": (event) => {
       // Prevent default browser form submit
       event.preventDefault()
-
       // Get value from form element
       var username = event.target.user.value
       //create socket
@@ -21,7 +20,6 @@ Template.home.events({
       Router.go('/waitOpponent')
       // Clear form
       event.target.user.value = ""
-
     }
 });
 
@@ -52,7 +50,6 @@ Template.waitOpponent.events({
     Router.go('/gamesetup')
   }
 })
-
 
 Template.gamesetup.events({
   "click .panel": (event) => {

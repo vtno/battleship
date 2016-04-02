@@ -4,6 +4,7 @@ Ship = class Ship {
     this.viablePos = viablePos
     this.state = viablePos[0]
     this.cur = 0
+
     //create an occupied space of the ship
     console.log('New ship created id=' + id +" "+ viablePos)
   }

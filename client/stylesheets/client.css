@@ -36,6 +36,9 @@ h1 {
 .wait{
   height: 70%;
 }
+.wait-ready-button {
+  display:none;
+}
 .wait>h3{
   width: 100%;
   text-align: center;
