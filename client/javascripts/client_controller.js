@@ -25,20 +25,15 @@ Template.waitOpponent.onRendered(()=>{
   console.log('enter waitopp')
   socket.emit("getPlayerData")
   socket.on("playerData",(name)=>{
-  user = new User(1,name,socket)
-      $('.name').append("Welcome "+name)
+    user = new User(1,name,socket)
+    $('.name').append("Welcome "+name)
+    socket.emit('findOpp')
   })
-  socket.on('updateLobby',(data)=>{
-    console.log('Opponent ='+data)
-    socket.emit('ready')
+  socket.on('opponent',(oppname)=>{
+    console.log('Opponent= '+oppname)
     $('.wait').css('display','none')
     $('.wait-ready-button').css('display','inline')
-  })
-  socket.on('opponent',(data)=>{
-    console.log("OPPOOOO")
-    console.log('Opponent= '+data)
-    $('.wait').css('display','none')
-    $('.wait-ready-button').css('display','inline')
+    $('.opponent').append('Your opponent: '+oppname)
   })
   socket.on('startgame')
 })

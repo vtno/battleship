@@ -3,6 +3,7 @@ User = class User {
     this.id = id
     this.name = name
     this.socket = socket
+    this.status = 0
   }
   getId(){
     return this.id
@@ -18,6 +19,13 @@ User = class User {
   }
   setShips(ships){
     this.ships = ships
+  }
+  setOpponent(opp){
+    this.opp = opp
+  }
+  setStatus(status){
+    //0 = no opp, 1= have opp
+    this.status = status
   }
   isHit(ships){
     let c = ships.getCoordinates()
