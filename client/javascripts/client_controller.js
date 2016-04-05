@@ -25,7 +25,7 @@ Template.waitOpponent.onRendered(()=>{
   console.log('enter waitopp')
   socket.emit("getPlayerData")
   socket.on("playerData",(name)=>{
-    user = new User(1,name,socket)
+  user = new User(1,name,socket)
       $('.name').append("Welcome "+name)
   })
   socket.on('updateLobby',(data)=>{
