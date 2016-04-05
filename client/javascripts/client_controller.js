@@ -1,6 +1,7 @@
 var socket
 var coordinates = []
 var ships = []
+var user
 
 Template.home.events({
     "submit .ip-form": (event) => {
@@ -24,10 +25,10 @@ Template.waitOpponent.onRendered(()=>{
   console.log('enter waitopp')
   socket.emit("getPlayerData")
   socket.on("playerData",(name)=>{
+    user = new User(1,name,socket)
       $('.name').append("Welcome "+name)
   })
   socket.on('updateLobby',(data)=>{
-    console.log("HELLOO!")
     console.log('Opponent ='+data)
     socket.emit('ready')
     $('.wait').css('display','none')

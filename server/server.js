@@ -36,7 +36,7 @@ Meteor.startup(()=>{
     })
     socket.on('ready',()=>{
       console.log('[ready]current user in the system= '+users.length)
-      socket.broadcast.emit('opponent', users[0].username)
+      socket.broadcast.emit('opponent', getUser(socket).getName())
       socket.on('shipdata', (ships)=>{
 
       })
