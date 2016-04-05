@@ -1,9 +1,8 @@
 User = class User {
-  constructor(id,name,socket,coordinates){
+  constructor(id,name,socket){
     this.id = id
     this.name = name
     this.socket = socket
-    this.coordinates = coordinates
   }
   getId(){
     return this.id
@@ -17,8 +16,11 @@ User = class User {
   getCoordinates(){
     return this.coordinates
   }
-  isHit(coor){
-    let c = this.coordinates
+  setShips(ships){
+    this.ships = ships
+  }
+  isHit(ships){
+    let c = ships.getCoordinates()
     for(let i=0;i<c.length;i++){
       if(c[i]==coor){
         return true

@@ -27,6 +27,3 @@ meteorhacks:npm
 npm-container
 cosmos:browserify
 xolvio:cucumber
-sanjo:jasmine
-velocity:html-reporter
-velocity:console-reporter

@@ -4,7 +4,7 @@ Ship = class Ship {
     this.viablePos = viablePos
     this.state = viablePos[0]
     this.cur = 0
-
+    this.coordinates = this.setCoordinates(this.id,this.state)
     //create an occupied space of the ship
     console.log('New ship created id=' + id +" "+ viablePos)
   }
@@ -26,6 +26,54 @@ Ship = class Ship {
   }
   getId(){
     return this.id
+  }
+  setCoordinates(id, state){
+    console.log("set coor for state= "+id+"[ "+state+" ]")
+    let coor = []
+    let row = parseInt(id.charAt(0))
+    let col = parseInt(id.charAt(1))
+    let pos1,pos2,pos3
+    switch (state) {
+      case 't':
+        pos1 = (row-1).toString()+col.toString()
+        pos2 = (row-2).toString()+col.toString()
+        pos3 = (row-3).toString()+col.toString()
+        coor.push(pos1)
+        coor.push(pos2)
+        coor.push(pos3)
+      break;
+      case 'r':
+        console.log('enter state R')
+        pos1 = row.toString()+(col+1).toString()
+        pos2 = row.toString()+(col+2).toString()
+        pos3 = row.toString()+(col+3).toString()
+        coor.push(pos1)
+        coor.push(pos2)
+        coor.push(pos3)
+      break;
+      case 'b':
+        pos1 = (row+1).toString()+col.toString()
+        pos2 = (row+2).toString()+col.toString()
+        pos3 = (row+3).toString()+col.toString()
+        coor.push(pos1)
+        coor.push(pos2)
+        coor.push(pos3)
+      break;
+      case 'l':
+        pos1 = row.toString()+(col-1).toString()
+        pos2 = row.toString()+(col-2).toString()
+        pos3 = row.toString()+(col-3).toString()
+        coor.push(pos1)
+        coor.push(pos2)
+        coor.push(pos3)
+      break;
+      default:
+        return "error"
+    }
+    return coor
+  }
+  getCoordinates(){
+    return this.coordinates
   }
 }
 

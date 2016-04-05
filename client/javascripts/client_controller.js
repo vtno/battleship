@@ -9,14 +9,11 @@ Template.home.events({
       // Get value from form element
       var username = event.target.user.value
       //create socket
-      socket = io.connect('http://localhost:9999/')
+      socket = io.connect('http://localhost:9999/', {forceNew: true})
       socket.on('connect',()=>{
         console.log('socket connected!')
       })
-
-      console.log('username='+username)
-
-      socket.emit('adduser',{username: username})
+      socket.emit('adduser',username)
       Router.go('/waitOpponent')
       // Clear form
       event.target.user.value = ""
@@ -30,12 +27,14 @@ Template.waitOpponent.onRendered(()=>{
       $('.name').append("Welcome "+name)
   })
   socket.on('updateLobby',(data)=>{
+    console.log("HELLOO!")
     console.log('Opponent ='+data)
     socket.emit('ready')
     $('.wait').css('display','none')
     $('.wait-ready-button').css('display','inline')
   })
   socket.on('opponent',(data)=>{
+    console.log("OPPOOOO")
     console.log('Opponent= '+data)
     $('.wait').css('display','none')
     $('.wait-ready-button').css('display','inline')
@@ -66,6 +65,7 @@ Template.gamesetup.events({
       console.log("new ship id="+ ship.getId())
       console.log("new ship state="+ ship.getState())
       console.log("new ship viablePos"+ ship.getViablePos())
+      console.log("get coordinates"+ ship.getCoordinates())
       console.log(ships)
     } else {
       //update ship state
@@ -76,8 +76,9 @@ Template.gamesetup.events({
       console.log('updated vialbePos='+s.getViablePos())
       console.log(ships)
     }
-    let coordinate = dom.id
-    coordinates.push(coordinate)
+  },
+  'click .setboard': (e) =>{
+    socket.emit('shipdata',ships)
   }
 
 })
