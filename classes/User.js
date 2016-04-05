@@ -22,6 +22,7 @@ User = class User {
   }
   setOpponent(opp){
     this.opp = opp
+    this.setStatus(1)
   }
   setStatus(status){
     //0 = no opp, 1= have opp

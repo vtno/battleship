@@ -11,7 +11,7 @@ Meteor.startup(()=>{
       // console.log("arr socket id= "+users[i].getSocket().conn)
       // console.log("input socket id= "+s.conn)
       if(users[i].getSocket().conn === s.conn){
-        // console.log('found user='+users[i].getName())
+        console.log('found user='+users[i].getName())
         return users[i]
       }
     }
@@ -23,6 +23,7 @@ Meteor.startup(()=>{
         return users[i]
       }
     }
+    return false
   }
   //server port here
   server.listen(9999,()=>{
@@ -46,12 +47,14 @@ Meteor.startup(()=>{
       console.log("sent player data")
     })
     socket.on('findOpp',()=>{
-      if(users.length %2 ==0){
+      if(users.length > 1 && users.length %2 == 0){
         let user = getUser(socket)
         let opp = findOpp(socket)
         user.setOpponent(opp)
+        opp.setOpponent(user)
         socket.emit('opponent', opp.getName())
         opp.getSocket().emit('opponent', user.getName())
+        console.log('[Matchmaking] Success! '+user.getName()+' vs '+opp.getName())
       }
     })
     socket.on('ready',()=>{
@@ -62,11 +65,11 @@ Meteor.startup(()=>{
     })
     socket.on('disconnect', ()=>{
       let user = getUser(socket)
+      console.log('User '+user.getName()+' has disconnected')
       let index = users.indexOf(user)
       if (index > -1) {
         users.splice(index, 1);
       }
-      console.log('User '+user.getName()+' has disconnected')
       console.log('UPDATE[del_user]: current user in the system= '+users.length)
     })
 
