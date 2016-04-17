@@ -2,6 +2,7 @@ var socket
 var coordinates = []
 var ships = []
 var user
+var gameData
 getShip = getShip = (id,ships)=>{
   for(let i=0;i<ships.length;i++){
     if(ships[i].getId()==id){
@@ -78,7 +79,7 @@ Template.gamesetup.events({
           })
         }
       } else {
-        $('#notice').html("You already have 4 ships! Please remove one to add new ship.")
+        $('#alert').html("You already have 4 ships! Please remove one to add new ship.")
       }
       // console.log("new ship id="+ ship.getId())
       // console.log("new ship state="+ ship.getState())
@@ -110,6 +111,7 @@ Template.gamesetup.events({
         console.log('========SHIP REMOVED===========')
         console.log('ID=' + ship.getId() +" Ship length=" + ships.length)
         $('#notice').html('')
+        $('#alert').html('')
       } else {
         //update coor on screen
         ship = findShip(id,ships)
@@ -128,14 +130,13 @@ Template.gamesetup.events({
   },
   'click .setboard': (e) =>{
     if(ships.length < 4){
-      $('#notice').html("You only create "+ships.length+"ships You need 4 ship!")
+      $('#alert').html("You only create "+ships.length+"ships You need 4 ship!")
     } else {
-      $('#notice').css({
-        'color': 'green'
-      })
       $('#notice').html("Your coordinates are sent to the server.<br> Now waiting for opponent.")
       socket.emit('ready',coordinates)
-      socket.on('gameStart',()=>{
+      socket.on('gameStart',(data)=>{
+        //set data for the game
+        gameData = data
         Router.go('/game')
       })
     }
@@ -144,5 +145,63 @@ Template.gamesetup.events({
 })
 
 Template.game.onRendered(()=>{
-  console.log('FUCK')
+  //generate user board
+  let coor = gameData.yourCoor
+  for(let i=0;i<coor.length;i++){
+    $('#'+coor[i]).css({
+      'background-color' : 'green'
+    })
+  }
+  //random a number
+
+  socket.emit('board init')
+  //boolean
+  socket.on('first',(first)=>{
+    if(first){
+      $('#notice').html('You start first')
+    } else {
+      $('#notice').html('Your opponent start first')
+    }
+  })
+  socket.on('play',()=>{
+    console.log('playing')
+    $('.panel2').click((event)=>{
+      let dom = event.target || event.src
+      let atk = dom.id.toString()
+      console.log('attack at '+atk)
+      socket.emit('atk',atk)
+    })
+  })
+  socket.on('atkHit',(atk)=>{
+    console.log('ATK HIT!'+atk)
+    $('#'+atk).css({
+      'background-color' : 'red'
+    })
+  })
+  socket.on('atkMiss',(atk)=>{
+    console.log('ATK MISS='+atk)
+    $('#'+atk).css({
+      'background-color' : 'black'
+    })
+  })
+  socket.on('hit',(atk)=>{
+    console.log('GOT HIT'+atk)
+    atk = atk.substring(1)
+    $('#'+atk).css({
+      'background-color' : 'red'
+    })
+  })
+  socket.on('miss',(atk)=>{
+    console.log('OPP MISS'+atk)
+    atk = atk.substring(1)
+    $('#'+atk).css({
+      'background-color' : 'black'
+    })
+  })
+  socket.on('wait',()=>{
+    $('.panel2').click(()=>{
+      $('#notice').html('')
+      $('#alert').html('Please wait for your turn!')
+    })
+  })
 })

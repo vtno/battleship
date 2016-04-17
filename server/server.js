@@ -4,6 +4,8 @@ Meteor.startup(()=>{
   let users= []
   let matchs= []
   let id = 1
+  let init = 0
+  // let ran = 0
 
   //helper method for finding current user for each socket
   getUser = (s)=>{
@@ -67,12 +69,57 @@ Meteor.startup(()=>{
       if(opp.status == 'ready'){
         console.log('==========commence battle!=========')
         console.log(user.getName()+' VS '+opp.getName())
-        user.getSocket().emit('gameStart')
-        user.getOpponent().getSocket().emit('gameStart')
+        let gameData1 = {
+          name: user.getName(),
+          oppname: opp.getName(),
+          yourCoor: user.getCoordinates()
+        }
+        let gameData2 = {
+          name: opp.getName(),
+          oppname: user.getName(),
+          yourCoor: opp.getCoordinates()
+        }
+        user.getSocket().emit('gameStart',gameData1)
+        user.getOpponent().getSocket().emit('gameStart',gameData2)
       }
     })
-    socket.on('shipdata', (ships)=>{
-      console.log(ship)
+    socket.on('board init', ()=>{
+      init++
+      if(init%2==0){
+        let user = getUser(socket)
+        let opp = user.getOpponent()
+        // if(ran==0){
+        //   ran = Math.floor((Math.random() * 2) + 1);
+        // }
+        let ran = Math.floor((Math.random() * 2) + 1);
+        console.log(ran)
+        if(ran == 1){
+          user.getSocket().emit('first', true)
+          opp.getSocket().emit('first',false)
+          user.getSocket().emit('play')
+          opp.getSocket().emit('wait')
+        }else{
+          user.getSocket().emit('first', false)
+          opp.getSocket().emit('first',true)
+          user.getSocket().emit('wait')
+          opp.getSocket().emit('play')
+        }
+      }
+    })
+    socket.on('atk',(atk)=>{
+      let user = getUser(socket)
+      let opp = user.getOpponent()
+      if(opp.isHit(atk)){
+        user.getSocket().emit('atkHit',atk)
+        opp.getSocket().emit('hit',atk)
+        if(opp.isLost()){
+          user.getSocket().emit('win')
+          opp.getSocket().emit('lose')
+        }
+      }else {
+        user.getSocket().emit('atkMiss',atk)
+        opp.getSocket().emit('miss',atk)
+      }
     })
     socket.on('disconnect', ()=>{
       let user = getUser(socket)

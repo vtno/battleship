@@ -41,6 +41,10 @@ h1 {
 }
 
 #notice {
+  color: green;
+  margin-bottom: 2rem;
+}
+#alert {
   color: red;
   margin-bottom: 2rem;
 }

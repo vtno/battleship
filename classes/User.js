@@ -34,13 +34,24 @@ User = class User {
   setCoordinates(coor){
     this.coordinates = coor
   }
-  isHit(){
+  isHit(coor){
+    coor = coor.substring(1)
+    console.log('atk position= '+coor)
+    console.log('ship postions= '+this.coordinates)
     let c = this.coordinates
     for(let i=0;i<c.length;i++){
       if(c[i]==coor){
+        removeIf(c[i],this.coordinates)
         return true
       }
     }
     return false
+  }
+  isLost(){
+    if(this.coordinates.length == 0){
+      return true
+    }else{
+      return false
+    }
   }
 }
