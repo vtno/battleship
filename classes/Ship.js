@@ -4,7 +4,7 @@ Ship = class Ship {
     this.viablePos = viablePos
     this.state = viablePos[0]
     this.cur = 0
-    this.coordinates = this.setCoordinates(this.id,this.state)
+    this.setCoordinates(this.id,this.state)
     //create an occupied space of the ship
     console.log('New ship created id=' + id +" "+ viablePos)
   }
@@ -16,7 +16,7 @@ Ship = class Ship {
       this.cur = 0
     }
     this.state = viablePos[this.cur]
-    setCoordinates(this.id,this.state)
+    this.setCoordinates(this.id,this.state)
     console.log('NEXT STATE COMPLETE CURSTATE='+this.state)
   }
   getViablePos(){
@@ -45,7 +45,6 @@ Ship = class Ship {
         coor.push(pos3)
       break;
       case 'r':
-        console.log('enter state R')
         pos1 = row.toString()+(col+1).toString()
         pos2 = row.toString()+(col+2).toString()
         pos3 = row.toString()+(col+3).toString()
@@ -69,10 +68,13 @@ Ship = class Ship {
         coor.push(pos2)
         coor.push(pos3)
       break;
+      case '0':
+        coor = []
+      break;
       default:
         return "error"
     }
-    return coor
+    this.coordinates = coor
   }
   getCoordinates(){
     return this.coordinates
@@ -87,7 +89,7 @@ removeIf = removeIf=(inp,arr)=>{
   }
 }
 viablePos = viablePos=(id,coor)=>{
-  let arr = ['r','t','b','l']
+  let arr = ['r','t','b','l','0']
   let row = parseInt(id.charAt(0))
   console.log('row='+row)
   let col = parseInt(id.charAt(1))
