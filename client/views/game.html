@@ -1,1 +1,10 @@
-<h1>FUCK</h1>
+<template name="game">
+  <div class="container center align">
+    <h3 class="margin-bottom">Commence Battle!</h3>
+    <h6 id="notice"></h6>
+    <h4 class="margin-bottom" id="oppName">Opp Ship</h4>
+    {{> board2}}
+    <h4 class="margin-bottom" id="playerName">Your Ship</h4>
+    {{> board1}}
+  </div>
+</template>

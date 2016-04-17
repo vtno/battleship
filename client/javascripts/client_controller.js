@@ -63,7 +63,7 @@ Template.gamesetup.events({
 
     //check if the position is viable
     if(!checkShip(id,ships)){
-      notice.innerHTML = ''
+      $('#notice').html('')
       //create new ship
       let ship = new Ship(id, viablePos(id,coordinates))
       if(ships.length<4){
@@ -73,12 +73,12 @@ Template.gamesetup.events({
         for(let i=0;i<cdn.length;i++){
           coordinates.push(cdn[i])
           // console.log('curren coordinates'+coordinates)
-          let tile = document.getElementById(cdn[i])
-          tile.innerHTML = '1'
+          $('#'+cdn[i]).css({
+            'background-color':'green'
+          })
         }
       } else {
-        let notice = document.getElementById('notice')
-        notice.innerHTML = "You already have 4 ships! Please remove one to add new ship."
+        $('#notice').html("You already have 4 ships! Please remove one to add new ship.")
       }
       // console.log("new ship id="+ ship.getId())
       // console.log("new ship state="+ ship.getState())
@@ -96,8 +96,9 @@ Template.gamesetup.events({
       for(let i=0;i<cdn.length;i++){
         removeIf(cdn[i],coordinates)
         console.log('curren coordinates'+coordinates)
-        let tile = document.getElementById(cdn[i])
-        tile.innerHTML = '0'
+        $('#'+cdn[i]).css({
+          'background-color':'grey'
+        })
       }
       console.log("========REMOVED============\n"+cdn)
       //update ship state
@@ -108,7 +109,7 @@ Template.gamesetup.events({
         removeIf(ship,ships)
         console.log('========SHIP REMOVED===========')
         console.log('ID=' + ship.getId() +" Ship length=" + ships.length)
-
+        $('#notice').html('')
       } else {
         //update coor on screen
         ship = findShip(id,ships)
@@ -118,14 +119,30 @@ Template.gamesetup.events({
         for(let i=0;i<cdn.length;i++){
           coordinates.push(cdn[i])
           // console.log('curren coordinates'+coordinates)
-          let tile = document.getElementById(cdn[i])
-          tile.innerHTML = '1'
+          $('#'+cdn[i]).css({
+            'background-color':'green'
+          })
         }
       }
     }
   },
   'click .setboard': (e) =>{
-    socket.emit('ready',coordinates)
+    if(ships.length < 4){
+      $('#notice').html("You only create "+ships.length+"ships You need 4 ship!")
+    } else {
+      $('#notice').css({
+        'color': 'green'
+      })
+      $('#notice').html("Your coordinates are sent to the server.<br> Now waiting for opponent.")
+      socket.emit('ready',coordinates)
+      socket.on('gameStart',()=>{
+        Router.go('/game')
+      })
+    }
   }
 
+})
+
+Template.game.onRendered(()=>{
+  console.log('FUCK')
 })

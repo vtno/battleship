@@ -17,6 +17,9 @@ User = class User {
   getCoordinates(){
     return this.coordinates
   }
+  getOpponent(){
+    return this.opp
+  }
   setShips(ships){
     this.ships = ships
   }
@@ -31,8 +34,8 @@ User = class User {
   setCoordinates(coor){
     this.coordinates = coor
   }
-  isHit(ships){
-    let c = ships.getCoordinates()
+  isHit(){
+    let c = this.coordinates
     for(let i=0;i<c.length;i++){
       if(c[i]==coor){
         return true

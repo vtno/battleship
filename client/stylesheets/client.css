@@ -27,12 +27,25 @@ html, body{
 h1 {
   font-size: 100px;
 }
+.panel2{
+  background-color: grey;
+  border: 1px solid black;
+  cursor: crosshair;
+  height: 50px;
+}
+.panel{
+  background-color: grey;
+  border: 1px solid black;
+  cursor: pointer;
+  height: 50px;
+}
+
 #notice {
   color: red;
   margin-bottom: 2rem;
 }
 .margin-auto{
-  margin: 0 auto;
+  margin: 0 auto !important;
 }
 .mid-button{
   text-align: center;
@@ -54,4 +67,7 @@ h1 {
   -webkit-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
+}
+.panel {
+  text-align: center;
 }

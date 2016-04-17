@@ -60,8 +60,16 @@ Meteor.startup(()=>{
     })
     socket.on('ready',(coordinates)=>{
       let user = getUser(socket)
+      let opp = user.getOpponent()
       user.setCoordinates(coordinates)
       console.log(user.getName()+" coordinates are "+coordinates)
+      user.status = 'ready'
+      if(opp.status == 'ready'){
+        console.log('==========commence battle!=========')
+        console.log(user.getName()+' VS '+opp.getName())
+        user.getSocket().emit('gameStart')
+        user.getOpponent().getSocket().emit('gameStart')
+      }
     })
     socket.on('shipdata', (ships)=>{
       console.log(ship)

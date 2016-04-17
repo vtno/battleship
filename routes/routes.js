@@ -10,4 +10,7 @@ Router.route('/waitOpponent', {
 Router.route('/gamesetup', {
   template: 'gamesetup'
 })
+Router.route('/game', {
+  template: 'game'
+})
 console.log("WORKING")
