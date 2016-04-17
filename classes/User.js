@@ -28,6 +28,9 @@ User = class User {
     //0 = no opp, 1= have opp
     this.status = status
   }
+  setCoordinates(coor){
+    this.coordinates = coor
+  }
   isHit(ships){
     let c = ships.getCoordinates()
     for(let i=0;i<c.length;i++){

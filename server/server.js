@@ -58,8 +58,10 @@ Meteor.startup(()=>{
         console.log('[Matchmaking] Success! '+user.getName()+' vs '+opp.getName())
       }
     })
-    socket.on('ready',()=>{
-      // socket.broadcast.emit('opponent', getUser(socket).getName())
+    socket.on('ready',(coordinates)=>{
+      let user = getUser(socket)
+      user.setCoordinates(coordinates)
+      console.log(user.getName()+" coordinates are "+coordinates)
     })
     socket.on('shipdata', (ships)=>{
       console.log(ship)

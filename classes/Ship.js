@@ -97,27 +97,21 @@ viablePos = viablePos=(id,coor)=>{
 
   //check end of board first
   if(row+3>7){
-    // let v = arr.indexOf('b')
-    // arr.splice(v,1)
     removeIf('b',arr)
     console.log('cannot bottom')
   }
   if(row-3<0){
-    let v = arr.indexOf('t')
-    arr.splice(v,1)
+    removeIf('t',arr)
     console.log('cannot top')
   }
   if(col+3>7){
-    let v = arr.indexOf('r')
-    arr.splice(v,1)
+    removeIf('r',arr)
     console.log('cannot right')
   }
   if(col-3<0){
-    let v = arr.indexOf('l')
-    arr.splice(v,1)
+    removeIf('l',arr)
     console.log('cannot left')
   }
-
   if(coor.length > 0){
     for(let i=0;i<coor.length;i++){
       let r=parseInt(coor[i].charAt(0))
@@ -130,10 +124,29 @@ viablePos = viablePos=(id,coor)=>{
       }
       //check same row
       console.log("CURRENT ARR BEFORE REM="+arr)
+      //same row
       if(row==r){
-        if(col+1==c || col+2==c || col+3==c){
+        if(col==c || col+1==c || col+2==c || col+3==c){
           removeIf('r',arr)
           console.log('cannot right')
+        }
+        if(col==c || col-1==c || col-2==c || col-3==c){
+          removeIf('l',arr)
+          console.log('cannot left')
+        }
+        //diff row
+      } else {
+        if(row+1 == r || row+2==r || row+3==r){
+          if(col==c){
+            removeIf('b',arr)
+            console.log('cannot bot')
+          }
+        }
+        if(row-1 == r || row-2==r || row-3==r){
+          if(col==c){
+            removeIf('t',arr)
+            console.log('cannot top')
+          }
         }
       }
     }
