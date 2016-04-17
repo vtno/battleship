@@ -39,7 +39,12 @@ h1 {
   cursor: pointer;
   height: 50px;
 }
-
+.continue {
+  display: none;
+}
+.end {
+  display:none;
+}
 #notice {
   color: green;
   margin-bottom: 2rem;

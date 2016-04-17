@@ -3,6 +3,9 @@ var coordinates = []
 var ships = []
 var user
 var gameData
+var myscore = 0
+var oppscore =0
+var cont = false
 getShip = getShip = (id,ships)=>{
   for(let i=0;i<ships.length;i++){
     if(ships[i].getId()==id){
@@ -53,7 +56,13 @@ Template.waitOpponent.events({
     Router.go('/gamesetup')
   }
 })
-
+Template.gamesetup.onRendered(()=>{
+  socket.on('re_notice',(name)=>{
+    ships = []
+    coordinates = []
+    $('#notice').html('The game has been reset by '+name)
+  })
+})
 Template.gamesetup.events({
   "click .panel": (event) => {
     event.preventDefault()
@@ -129,7 +138,7 @@ Template.gamesetup.events({
     }
   },
   'click .setboard': (e) =>{
-    if(ships.length < 4){
+    if(ships.length < 1){
       $('#alert').html("You only create "+ships.length+"ships You need 4 ship!")
     } else {
       $('#notice').html("Your coordinates are sent to the server.<br> Now waiting for opponent.")
@@ -152,24 +161,32 @@ Template.game.onRendered(()=>{
       'background-color' : 'green'
     })
   }
+  $('#score').html(gameData.name+' '+gameData.score+' vs '+gameData.oppscore+' '+gameData.oppname)
+  $('#oppName').html(gameData.oppname+'\'s ship')
+  $('#playerName').html(gameData.name+'\'s ship')
   //random a number
 
   socket.emit('board init')
   //boolean
   socket.on('first',(first)=>{
     if(first){
-      $('#notice').html('You start first')
+      $('#startFirst').html('You start first')
     } else {
-      $('#notice').html('Your opponent start first')
+      $('#startFirst').html('Your opponent start first')
     }
   })
   socket.on('play',()=>{
+    $('#notice').html('Your turn')
+    $('#alert').html('')
     console.log('playing')
+    $('.panel2').unbind()
     $('.panel2').click((event)=>{
       let dom = event.target || event.src
       let atk = dom.id.toString()
       console.log('attack at '+atk)
       socket.emit('atk',atk)
+      socket.emit('endturn')
+      $('#startFirst').html('')
     })
   })
   socket.on('atkHit',(atk)=>{
@@ -199,9 +216,47 @@ Template.game.onRendered(()=>{
     })
   })
   socket.on('wait',()=>{
+    $('#notice').html('Opponent turn')
+    $('.panel2').unbind()
     $('.panel2').click(()=>{
       $('#notice').html('')
       $('#alert').html('Please wait for your turn!')
     })
   })
+  socket.on('win',(scores)=>{
+    $('#notice').html('You WIN!')
+    $('.panel2').unbind()
+    $('#score').html(gameData.name+' '+scores[0]+' vs '+scores[1]+' '+gameData.oppname)
+    $('.end, .continue').css({
+      'display' : 'inline'
+    })
+  })
+  socket.on('lose',(scores)=>{
+    $('#alert').html('You LOSE!')
+    $('.panel2').unbind()
+    $('#score').html(gameData.name+' '+scores[1]+' vs '+scores[0]+' '+gameData.oppname)
+    $('.end, .continue').css({
+      'display' : 'inline'
+    })
+  })
+  socket.on('reset',()=>{
+    Router.go('/gamesetup')
+  })
+})
+Template.game.events({
+  'click .reset' : (e)=>{
+    socket.emit('reset')
+    ships = []
+    coordinates = []
+    Router.go('/gamesetup')
+  },
+  'click .end' : (e)=>{
+    Router.go('/result')
+  },
+  'click .continue' : (e)=>{
+    socket.emit('continue')
+    ships = []
+    coordinates = []
+    Router.go('/gamesetup')
+  }
 })

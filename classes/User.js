@@ -4,6 +4,7 @@ User = class User {
     this.name = name
     this.socket = socket
     this.status = 0
+    this.score = 0
   }
   getId(){
     return this.id
@@ -33,6 +34,11 @@ User = class User {
   }
   setCoordinates(coor){
     this.coordinates = coor
+  }
+  reset(){
+    this.score = 0
+    this.coordinates = []
+    this.status = 1
   }
   isHit(coor){
     coor = coor.substring(1)
