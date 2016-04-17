@@ -16,6 +16,7 @@ Ship = class Ship {
       this.cur = 0
     }
     this.state = viablePos[this.cur]
+    setCoordinates(this.id,this.state)
     console.log('NEXT STATE COMPLETE CURSTATE='+this.state)
   }
   getViablePos(){
@@ -33,6 +34,7 @@ Ship = class Ship {
     let row = parseInt(id.charAt(0))
     let col = parseInt(id.charAt(1))
     let pos1,pos2,pos3
+    coor.push(this.id)
     switch (state) {
       case 't':
         pos1 = (row-1).toString()+col.toString()
@@ -76,16 +78,26 @@ Ship = class Ship {
     return this.coordinates
   }
 }
-
-viablePos = viablePos=(id)=>{
+removeIf = removeIf=(inp,arr)=>{
+  for(let i=0;i<arr.length;i++){
+    if(arr[i]==inp){
+      let v = arr.indexOf(inp)
+      arr.splice(v,1)
+    }
+  }
+}
+viablePos = viablePos=(id,coor)=>{
   let arr = ['r','t','b','l']
   let row = parseInt(id.charAt(0))
   console.log('row='+row)
   let col = parseInt(id.charAt(1))
   console.log('col='+col)
+
+  //check end of board first
   if(row+3>7){
-    let v = arr.indexOf('b')
-    arr.splice(v,1)
+    // let v = arr.indexOf('b')
+    // arr.splice(v,1)
+    removeIf('b',arr)
     console.log('cannot bottom')
   }
   if(row-3<0){
@@ -103,7 +115,28 @@ viablePos = viablePos=(id)=>{
     arr.splice(v,1)
     console.log('cannot left')
   }
-  console.log(arr)
+
+  if(coor.length > 0){
+    for(let i=0;i<coor.length;i++){
+      let r=parseInt(coor[i].charAt(0))
+      let c=parseInt(coor[i].charAt(1))
+      console.log("ENTER FOR IN VIABLE")
+      console.log('r='+r+'\trow='+row)
+      console.log('c='+c+'\tcol='+col)
+      if(coor[i]==id){
+        console.log('Already occupied!')
+      }
+      //check same row
+      console.log("CURRENT ARR BEFORE REM="+arr)
+      if(row==r){
+        if(col+1==c || col+2==c || col+3==c){
+          removeIf('r',arr)
+          console.log('cannot right')
+        }
+      }
+    }
+  }
+  console.log("FINAL ARR="+arr)
   return arr
 }
 checkShip = checkShip = (id,ships)=>{

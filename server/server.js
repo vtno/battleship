@@ -1,7 +1,8 @@
 Meteor.startup(()=>{
   let server = Meteor.npmRequire('http').createServer()
   let io = Meteor.npmRequire('socket.io')(server)
-  let users = []
+  let users= []
+  let matchs= []
   let id = 1
 
   //helper method for finding current user for each socket

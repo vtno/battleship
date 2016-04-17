@@ -2,7 +2,14 @@ var socket
 var coordinates = []
 var ships = []
 var user
-
+getShip = getShip = (id,ships)=>{
+  for(let i=0;i<ships.length;i++){
+    if(ships[i].getId()==id){
+      console.log('RETURNING SHIP='+ships[i].getId())
+      return ships[i]
+    }
+  }
+}
 Template.home.events({
     "submit .ip-form": (event) => {
       // Prevent default browser form submit
@@ -56,16 +63,35 @@ Template.gamesetup.events({
     //check if the position is viable
     if(!checkShip(id,ships)){
       //create new ship
-      let ship = new Ship(id, viablePos(id))
+      let ship = new Ship(id, viablePos(id,coordinates))
       ships.push(ship)
       console.log("new ship id="+ ship.getId())
       console.log("new ship state="+ ship.getState())
       console.log("new ship viablePos"+ ship.getViablePos())
       console.log("get coordinates"+ ship.getCoordinates())
       console.log(ships)
+      //change display on screen
+      let cdn = ship.getCoordinates()
+      for(let i=0;i<cdn.length;i++){
+        coordinates.push(cdn[i])
+        console.log('curren coordinates'+coordinates)
+        let tile = document.getElementById(cdn[i])
+        tile.innerHTML = '1'
+      }
     } else {
+      //delete old coor on screen
+      let ship = getShip(id,ships)
+      let cdn = ship.getCoordinates()
+      for(let i=0;i<cdn.length;i++){
+        coordinates.removeIf(cdn[i])
+        console.log('curren coordinates'+coordinates)
+        let tile = document.getElementById(cdn[i])
+        tile.innerHTML = '0'
+      }
       //update ship state
       updateShip(id,ships)
+      //change display on screen
+      //send the update state to the server
       let s = findShip(id,ships)
       console.log('updated ship id='+s.getId())
       console.log('updated state='+s.getState())
@@ -74,7 +100,7 @@ Template.gamesetup.events({
     }
   },
   'click .setboard': (e) =>{
-    socket.emit('shipdata',ships)
+    socket.emit('ready',ships)
   }
 
 })
