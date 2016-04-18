@@ -37,16 +37,31 @@ Template.waitOpponent.onRendered(()=>{
   socket.emit("getPlayerData")
   socket.on("playerData",(name)=>{
     user = new User(1,name,socket)
-    $('.name').append("Welcome "+name)
+    $('.name').html("Welcome "+name)
     socket.emit('findOpp')
   })
   socket.on('opponent',(oppname)=>{
     console.log('Opponent= '+oppname)
     $('.wait').css('display','none')
     $('.wait-ready-button').css('display','inline')
-    $('.opponent').append('Your opponent: '+oppname)
+    $('.opponent').html('Your opponent: '+oppname)
   })
-  socket.on('startgame')
+  socket.on('oppDis',(announce)=>{
+    console.log('enter OppDis')
+    $('#alert').html(announce)
+    $('#notice').html('finding new opponent')
+    $('.opponent').html('')
+    setTimeout(()=>{
+      $('#alert').html('')
+      $('#notice').html('')
+    }, 3000)
+    $('.wait').css({
+      'display': 'block'
+    })
+    $('.wait-ready-button').css({
+      'display' : 'none'
+    })
+  })
 })
 
 Template.waitOpponent.events({
@@ -61,6 +76,13 @@ Template.gamesetup.onRendered(()=>{
     ships = []
     coordinates = []
     $('#notice').html('The game has been reset by '+name)
+  })
+  socket.on('oppDis',(announce)=>{
+    $('#alert').html(announce)
+    $('#notice').html('Your opponent has disconnected. You will be redirect to finding opponent shortly')
+    setTimeout(()=>{
+      Router.go('/waitOpponent')
+    },4000)
   })
 })
 Template.gamesetup.events({
@@ -223,6 +245,14 @@ Template.game.onRendered(()=>{
       $('#alert').html('Please wait for your turn!')
     })
   })
+  socket.on('oppDis',(announce)=>{
+    $('#alert').html(announce)
+    $('#notice').html('Your opponent has disconnected. You will be redirect to finding opponent shortly')
+    setTimeout(()=>{
+      Router.go('/waitOpponent')
+    },4000)
+
+  })
   socket.on('win',(scores)=>{
     $('#notice').html('You WIN!')
     $('.panel2').unbind()
@@ -251,6 +281,7 @@ Template.game.events({
     Router.go('/gamesetup')
   },
   'click .end' : (e)=>{
+    socket.emit('endgame')
     Router.go('/result')
   },
   'click .continue' : (e)=>{

@@ -147,7 +147,11 @@ Meteor.startup(()=>{
     })
     socket.on('disconnect', ()=>{
       let user = getUser(socket)
+      let opp = user.getOpponent()
       console.log('User '+user.getName()+' has disconnected')
+      opp.hardReset()
+      let announce = 'Your opponent ==='+user.name+'=== has disconnected.'
+      opp.getSocket().emit('oppDis', announce)
       let index = users.indexOf(user)
       if (index > -1) {
         users.splice(index, 1);

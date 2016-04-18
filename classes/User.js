@@ -40,6 +40,11 @@ User = class User {
     this.coordinates = []
     this.status = 1
   }
+  hardReset(){
+    this.score = 0
+    this.coordinates = []
+    this.status = 0
+  }
   isHit(coor){
     coor = coor.substring(1)
     console.log('atk position= '+coor)
