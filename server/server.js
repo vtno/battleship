@@ -129,8 +129,9 @@ Meteor.startup(()=>{
     socket.on('continue',()=>{
       let user = getUser(socket)
       let opp = user.getOpponent()
-      user.coordinates = []
-      opp.coordinates = []
+      user.cont()
+      opp.cont()
+      opp.getSocket().emit('continue')
     })
     socket.on('endturn',()=>{
       let user = getUser(socket)

@@ -253,6 +253,9 @@ Template.game.onRendered(()=>{
     },4000)
 
   })
+  socket.on('continue',()=>{
+    Router.go('/gamesetup')
+  })
   socket.on('win',(scores)=>{
     $('#notice').html('You WIN!')
     $('.panel2').unbind()
