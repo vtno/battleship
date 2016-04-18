@@ -6,6 +6,7 @@ var gameData
 var myscore = 0
 var oppscore =0
 var cont = false
+var resultData
 getShip = getShip = (id,ships)=>{
   for(let i=0;i<ships.length;i++){
     if(ships[i].getId()==id){
@@ -275,6 +276,10 @@ Template.game.onRendered(()=>{
   socket.on('reset',()=>{
     Router.go('/gamesetup')
   })
+  socket.on('oppEnd',(data)=>{
+    Router.go('/result')
+    resultData = data
+  })
 })
 Template.game.events({
   'click .reset' : (e)=>{
@@ -285,7 +290,6 @@ Template.game.events({
   },
   'click .end' : (e)=>{
     socket.emit('endgame')
-    Router.go('/result')
   },
   'click .continue' : (e)=>{
     socket.emit('continue')
@@ -293,4 +297,22 @@ Template.game.events({
     coordinates = []
     Router.go('/gamesetup')
   }
+})
+Template.result.onRendered(()=>{
+  if(resultData.uScore > resultData.oScore){
+    $('#result').html('YOU WIN')
+  } else if (resultData.uScore < resultData.oScore) {
+    $('#result').html('YOU LOSE')
+  } else {
+    $('#result').html('TIE')
+  }
+
+  $('#name').html(resultData.name)
+  $('#score').html(resultData.uScore)
+  $('#oppname').html(resultData.oppname)
+  $('#oppscore').html(resultData.oScore)
+
+  $('.restart').click(()=>{
+    Router.go('/')
+  })
 })

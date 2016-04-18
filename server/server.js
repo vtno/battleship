@@ -159,6 +159,29 @@ Meteor.startup(()=>{
       }
       console.log('UPDATE[del_user]: current user in the system= '+users.length)
     })
-
+    socket.on('endgame',()=>{
+      let user = getUser(socket)
+      let opp = user.getOpponent()
+      let usock=user.getSocket()
+      let osock=opp.getSocket()
+      let data1={
+        name: user.getName(),
+        oppname: opp.getName(),
+        uScore: user.score,
+        oScore: opp.score
+      }
+      let data2={
+        name: opp.getName(),
+        oppname: user.getName(),
+        uScore: opp.score,
+        oScore: user.score
+      }
+      usock.emit('oppEnd', data1)
+      osock.emit('oppEnd', data2)
+      opp.hardReset()
+      user.hardReset()
+      removeIf(user,users)
+      removeIf(opp,users)
+    })
   })
 })

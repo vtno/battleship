@@ -40,10 +40,10 @@ h1 {
   height: 50px;
 }
 .continue {
-  display: none;
+  /*display: none;*/
 }
 .end {
-  display:none;
+  /*display:none;*/
 }
 #notice {
   color: green;
