@@ -1,4 +1,5 @@
 var socket
+var sSocket
 var coordinates = []
 var ships = []
 var user
@@ -15,6 +16,19 @@ getShip = getShip = (id,ships)=>{
     }
   }
 }
+//TESTING TIMER
+// Template.home.onRendered(()=>{
+//   let time = 10
+//   var interval = setInterval(()=>{
+//     $('#timer').html('Time: '+time)
+//     console.log(time)
+//     time--
+//     if(time<0){
+//       $('#timer').html('Time out')
+//       clearInterval(interval)
+//     }
+//   },1000)
+// })
 Template.home.events({
     "submit .ip-form": (event) => {
       // Prevent default browser form submit
@@ -22,7 +36,8 @@ Template.home.events({
       // Get value from form element
       var username = event.target.user.value
       //create socket
-      socket = io.connect('http://localhost:9999/', {forceNew: true})
+      // socket = io.connect('169.254.152.170:9999', {forceNew: true})
+      socket = io.connect('localhost:9999', {forceNew: true})
       socket.on('connect',()=>{
         console.log('socket connected!')
       })
@@ -73,9 +88,9 @@ Template.waitOpponent.events({
   }
 })
 Template.gamesetup.onRendered(()=>{
+  ships=[]
+  coordinates=[]
   socket.on('re_notice',(name)=>{
-    ships = []
-    coordinates = []
     $('#notice').html('The game has been reset by '+name)
   })
   socket.on('oppDis',(announce)=>{
@@ -199,6 +214,23 @@ Template.game.onRendered(()=>{
     }
   })
   socket.on('play',()=>{
+    let time = 10
+    var interval = setInterval(()=>{
+      $('#timer').html('Time: '+time)
+      console.log(time)
+      time--
+      if(time<0){
+        $('#timer').html('Time out')
+        clearInterval(interval)
+        $('.panel2').unbind()
+        $('.panel2').click(()=>{
+          $('#notice').html('')
+          $('#alert').html('Please wait for your turn!')
+        })
+        socket.emit('endturn')
+      }
+    },1000)
+
     $('#notice').html('Your turn')
     $('#alert').html('')
     console.log('playing')
@@ -208,6 +240,10 @@ Template.game.onRendered(()=>{
       let atk = dom.id.toString()
       console.log('attack at '+atk)
       socket.emit('atk',atk)
+      clearInterval(interval)
+      $('#timer').css({
+        'color' : 'red'
+      })
       socket.emit('endturn')
       $('#startFirst').html('')
     })
@@ -298,6 +334,7 @@ Template.game.events({
     Router.go('/gamesetup')
   }
 })
+
 Template.result.onRendered(()=>{
   if(resultData.uScore > resultData.oScore){
     $('#result').html('YOU WIN')
@@ -314,5 +351,20 @@ Template.result.onRendered(()=>{
 
   $('.restart').click(()=>{
     Router.go('/')
+  })
+})
+
+Template.server.onRendered(()=>{
+  //create sSocket
+  sSocket = io.connect('localhost:9999')
+  sSocket.emit('addserverGUI')
+  sSocket.on('updateServer',(data)=>{
+    let total = data.total
+    let names = data.names
+    $('#total').html('Total players in the system: '+total)
+    $('#name').html('<h2>Online players:</h2>')
+    for(let i=0;i<names.length;i++){
+      $('#name').append('<h4 id="'+ name[i]+'">'+names[i]+'</h4><br>')
+    }
   })
 })

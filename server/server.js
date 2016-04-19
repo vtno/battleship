@@ -5,6 +5,8 @@ Meteor.startup(()=>{
   let matchs= []
   let id = 1
   let init = 0
+  let serverGUI
+  let serverIsCon = false
   // let ran = 0
 
   //helper method for finding current user for each socket
@@ -33,6 +35,12 @@ Meteor.startup(()=>{
     console.log('listening on port '+9999)
   })
   io.on('connection', (socket)=>{
+    socket.on('addserverGUI',()=>{
+      if(!serverIsCon){
+        serverGUI = socket
+        serverIsCon = true
+      }
+    })
     socket.on('adduser',(name)=>{
       //new user
       users.push(new User(id,name,socket))
@@ -41,8 +49,18 @@ Meteor.startup(()=>{
       console.log('User '+name+' has connected.')
       socket.join('Lobby')
       console.log('UPDATE[add_user]: current user in the system= '+users.length)
+      let names  = []
+      for(let i=0;i<users.length;i++){
+        names.push(users[i].getName())
+      }
+      let serverData = {
+        total : users.length,
+        names : names
+      }
+      serverGUI.emit('updateServer',serverData)
       id++
     })
+
     socket.on('getPlayerData',()=>{
       let user = getUser(socket)
       console.log(user.getName())
@@ -146,6 +164,7 @@ Meteor.startup(()=>{
         opp.getSocket().emit('play')
       }
     })
+
     socket.on('disconnect', ()=>{
       let user = getUser(socket)
       let opp = user.getOpponent()
@@ -157,6 +176,16 @@ Meteor.startup(()=>{
       if (index > -1) {
         users.splice(index, 1);
       }
+      
+      let names  = []
+      for(let i=0;i<users.length;i++){
+        names.push(users[i].getName())
+      }
+      let serverData = {
+        total : users.length,
+        names : names
+      }
+      serverGUI.emit('updateServer',serverData)
       console.log('UPDATE[del_user]: current user in the system= '+users.length)
     })
     socket.on('endgame',()=>{

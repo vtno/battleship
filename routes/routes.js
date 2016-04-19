@@ -16,4 +16,7 @@ Router.route('/game', {
 Router.route('/result', {
   template: 'result'
 })
+Router.route('/server', {
+  template: 'server'
+})
 console.log("WORKING")
