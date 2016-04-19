@@ -16,28 +16,16 @@ getShip = getShip = (id,ships)=>{
     }
   }
 }
-//TESTING TIMER
-// Template.home.onRendered(()=>{
-//   let time = 10
-//   var interval = setInterval(()=>{
-//     $('#timer').html('Time: '+time)
-//     console.log(time)
-//     time--
-//     if(time<0){
-//       $('#timer').html('Time out')
-//       clearInterval(interval)
-//     }
-//   },1000)
-// })
 Template.home.events({
     "submit .ip-form": (event) => {
       // Prevent default browser form submit
       event.preventDefault()
       // Get value from form element
       var username = event.target.user.value
+      var ip = event.target.ipaddr.value
       //create socket
       // socket = io.connect('169.254.152.170:9999', {forceNew: true})
-      socket = io.connect('localhost:9999', {forceNew: true})
+      socket = io.connect(ip, {forceNew: true})
       socket.on('connect',()=>{
         console.log('socket connected!')
       })
@@ -45,6 +33,7 @@ Template.home.events({
       Router.go('/waitOpponent')
       // Clear form
       event.target.user.value = ""
+      event.target.ipaddr.value = ""
     }
 });
 
@@ -52,6 +41,12 @@ Template.waitOpponent.onRendered(()=>{
   console.log('enter waitopp')
   socket.emit("getPlayerData")
   socket.on("playerData",(name)=>{
+    $('#noserver, .back').css({
+      'display' : 'none'
+    })
+    $('.wait').css({
+      'display' : 'block'
+    })
     user = new User(1,name,socket)
     $('.name').html("Welcome "+name)
     socket.emit('findOpp')
@@ -85,6 +80,10 @@ Template.waitOpponent.events({
     console.log('Ready clicked')
     event.preventDefault()
     Router.go('/gamesetup')
+  },
+  'click .back' : (e)=>{
+    e.preventDefault()
+    Router.go('/')
   }
 })
 Template.gamesetup.onRendered(()=>{
@@ -356,7 +355,7 @@ Template.result.onRendered(()=>{
 
 Template.server.onRendered(()=>{
   //create sSocket
-  sSocket = io.connect('localhost:9999')
+  sSocket = io.connect('localhost:9998')
   sSocket.emit('addserverGUI')
   sSocket.on('updateServer',(data)=>{
     let total = data.total

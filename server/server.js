@@ -31,8 +31,8 @@ Meteor.startup(()=>{
     return false
   }
   //server port here
-  server.listen(9999,()=>{
-    console.log('listening on port '+9999)
+  server.listen(9998,()=>{
+    console.log('listening on port '+9998)
   })
   io.on('connection', (socket)=>{
     socket.on('addserverGUI',()=>{
@@ -176,7 +176,7 @@ Meteor.startup(()=>{
       if (index > -1) {
         users.splice(index, 1);
       }
-      
+
       let names  = []
       for(let i=0;i<users.length;i++){
         names.push(users[i].getName())
