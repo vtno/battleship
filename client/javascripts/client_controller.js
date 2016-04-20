@@ -8,6 +8,7 @@ var myscore = 0
 var oppscore =0
 var cont = false
 var resultData
+var interval
 getShip = getShip = (id,ships)=>{
   for(let i=0;i<ships.length;i++){
     if(ships[i].getId()==id){
@@ -214,7 +215,8 @@ Template.game.onRendered(()=>{
   })
   socket.on('play',()=>{
     let time = 10
-    var interval = setInterval(()=>{
+    clearInterval(interval)
+    interval = setInterval(()=>{
       $('#timer').html('Time: '+time)
       console.log(time)
       time--
@@ -309,8 +311,12 @@ Template.game.onRendered(()=>{
     })
   })
   socket.on('reset',()=>{
-    Router.go('/gamesetup')
-  })
+    clearInterval(interval)
+    $('#notice').html('The game has been resetted by the server You will be redirect to gamesetup shortly.')
+    setTimeout(()=>{
+        Router.go('/gamesetup')
+    },4000)
+})
   socket.on('oppEnd',(data)=>{
     Router.go('/result')
     resultData = data
@@ -349,6 +355,7 @@ Template.result.onRendered(()=>{
   $('#oppscore').html(resultData.oScore)
 
   $('.restart').click(()=>{
+    socket.emit('disconnect')
     Router.go('/')
   })
 })
