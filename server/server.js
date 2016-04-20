@@ -9,6 +9,7 @@ Meteor.startup(()=>{
   let serverIsCon = false
   // let ran = 0
 
+
   //helper method for finding current user for each socket
   getUser = (s)=>{
     for(let i=0;i<users.length;i++){
@@ -59,6 +60,15 @@ Meteor.startup(()=>{
       }
       serverGUI.emit('updateServer',serverData)
       id++
+    })
+    socket.on('resetAll',()=>{
+      console.log('resetAll')
+      for(let i=0;i<users.length;i++){
+        users[i].reset()
+        users[i].getSocket().emit('reset')
+        users[i].getSocket().emit('re_notice','server')
+      }
+      serverGUI.emit('resetAll')
     })
 
     socket.on('getPlayerData',()=>{
@@ -164,19 +174,20 @@ Meteor.startup(()=>{
         opp.getSocket().emit('play')
       }
     })
-
     socket.on('disconnect', ()=>{
       let user = getUser(socket)
-      let opp = user.getOpponent()
-      console.log('User '+user.getName()+' has disconnected')
-      opp.hardReset()
-      let announce = 'Your opponent ==='+user.name+'=== has disconnected.'
-      opp.getSocket().emit('oppDis', announce)
+      if(user.getOpponent()){
+        let opp = user.getOpponent()
+        console.log('User '+user.getName()+' has disconnected')
+        opp.hardReset()
+        let announce = 'Your opponent ==='+user.name+'=== has disconnected.'
+        opp.getSocket().emit('oppDis', announce)
+      }
       let index = users.indexOf(user)
       if (index > -1) {
         users.splice(index, 1);
       }
-      
+
       let names  = []
       for(let i=0;i<users.length;i++){
         names.push(users[i].getName())

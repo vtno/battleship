@@ -8,6 +8,7 @@ var myscore = 0
 var oppscore =0
 var cont = false
 var resultData
+var interval
 getShip = getShip = (id,ships)=>{
   for(let i=0;i<ships.length;i++){
     if(ships[i].getId()==id){
@@ -16,19 +17,8 @@ getShip = getShip = (id,ships)=>{
     }
   }
 }
-//TESTING TIMER
-// Template.home.onRendered(()=>{
-//   let time = 10
-//   var interval = setInterval(()=>{
-//     $('#timer').html('Time: '+time)
-//     console.log(time)
-//     time--
-//     if(time<0){
-//       $('#timer').html('Time out')
-//       clearInterval(interval)
-//     }
-//   },1000)
-// })
+//custom sInterval
+
 Template.home.events({
     "submit .ip-form": (event) => {
       // Prevent default browser form submit
@@ -88,9 +78,11 @@ Template.waitOpponent.events({
   }
 })
 Template.gamesetup.onRendered(()=>{
+  clearInterval(interval)
   ships=[]
   coordinates=[]
   socket.on('re_notice',(name)=>{
+    console.log('renotice')
     $('#notice').html('The game has been reset by '+name)
   })
   socket.on('oppDis',(announce)=>{
@@ -215,13 +207,14 @@ Template.game.onRendered(()=>{
   })
   socket.on('play',()=>{
     let time = 10
-    var interval = setInterval(()=>{
+    clearInterval(interval)
+    interval = setInterval(()=>{
       $('#timer').html('Time: '+time)
       console.log(time)
       time--
-      if(time<0){
-        $('#timer').html('Time out')
+      if(time==0){
         clearInterval(interval)
+        $('#timer').html('Time out')
         $('.panel2').unbind()
         $('.panel2').click(()=>{
           $('#notice').html('')
@@ -310,7 +303,11 @@ Template.game.onRendered(()=>{
     })
   })
   socket.on('reset',()=>{
-    Router.go('/gamesetup')
+    clearInterval(interval)
+    $('#notice').html('The game has been resetted by the server You will be redirect to gamesetup shortly.')
+    setTimeout(()=>{
+        Router.go('/gamesetup')
+    },4000)
   })
   socket.on('oppEnd',(data)=>{
     Router.go('/result')
@@ -319,6 +316,7 @@ Template.game.onRendered(()=>{
 })
 Template.game.events({
   'click .reset' : (e)=>{
+    clearInterval(interval)
     socket.emit('reset')
     ships = []
     coordinates = []
@@ -358,7 +356,15 @@ Template.server.onRendered(()=>{
   //create sSocket
   sSocket = io.connect('localhost:9999')
   sSocket.emit('addserverGUI')
+  sSocket.on('resetAll',()=>{
+    $('#notice').html('All games are resetted')
+    console.log('All game are resetted')
+    setTimeout(()=>{
+      $('#notice').html('')
+    },4000)
+  })
   sSocket.on('updateServer',(data)=>{
+    $('#notice').html('')
     let total = data.total
     let names = data.names
     $('#total').html('Total players in the system: '+total)
@@ -367,4 +373,10 @@ Template.server.onRendered(()=>{
       $('#name').append('<h4 id="'+ name[i]+'">'+names[i]+'</h4><br>')
     }
   })
+})
+Template.server.events({
+  'click .reset' : (e)=>{
+    console.log('reset all clicked')
+    sSocket.emit('resetAll')
+  }
 })
