@@ -218,10 +218,12 @@ Meteor.startup(()=>{
       }
       usock.emit('oppEnd', data1)
       osock.emit('oppEnd', data2)
-      opp.hardReset()
+      let names = []
+      // opp.hardReset()
       user.hardReset()
+      // socket.disconnect()
       removeIf(user,users)
-      removeIf(opp,users)
+      // removeIf(opp,users)
     })
   })
 })

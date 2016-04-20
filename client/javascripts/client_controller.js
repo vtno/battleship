@@ -370,7 +370,7 @@ Template.server.onRendered(()=>{
     $('#total').html('Total players in the system: '+total)
     $('#name').html('<h2>Online players:</h2>')
     for(let i=0;i<names.length;i++){
-      $('#name').append('<h4 id="'+ name[i]+'">'+names[i]+'</h4><br>')
+      $('#name').append('<h4 id="'+ names[i]+'">'+names[i]+'</h4><br>')
     }
   })
 })

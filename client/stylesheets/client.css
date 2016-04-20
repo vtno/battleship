@@ -43,7 +43,7 @@ h1 {
   display: none;
 }
 .end {
-  display:none;
+  /*display:none;*/
 }
 #notice {
   color: green;
